@@ -1,4 +1,5 @@
 #include "config.h"
+#include "Triangle.cpp"
 
 GLFWwindow* createWindow();
 unsigned int create_module(const std::string& filepath, unsigned int module_type);
@@ -8,9 +9,14 @@ unsigned int create_shader(const std::string& vertex_filepath, const std::string
 int main()
 {
 	GLFWwindow* window = createWindow();
-
-
 	unsigned int shader = create_shader("../OpenGL/shaders/vertex.txt", "../OpenGL/shaders/fragment.txt");
+
+	
+	std::vector<float> pointA = { -0.5f, -0.5f, 0.0f };
+	std::vector<float> pointB = { 0.5f, -0.5f, 0.0f };
+	std::vector<float> pointC = { 0.0f, 0.5f, 0.0f };
+	
+	Triangle* triangle = new Triangle(pointA, pointB, pointC);	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -19,6 +25,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shader);
+		
+		triangle->draw();
 
 		glfwSwapBuffers(window);
 	}
@@ -65,6 +73,8 @@ unsigned int create_shader(const std::string& vertex_filepath, const std::string
 	{
 		glAttachShader(shader, shaderModule);
 	}
+
+	glLinkProgram(shader);
 
 	int success;
 	glGetProgramiv(shader, GL_LINK_STATUS, &success);
