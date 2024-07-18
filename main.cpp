@@ -9,14 +9,19 @@ unsigned int create_shader(const std::string& vertex_filepath, const std::string
 int main()
 {
 	GLFWwindow* window = createWindow();
-	unsigned int shader = create_shader("../OpenGL/shaders/vertex.txt", "../OpenGL/shaders/fragment.txt");
+	unsigned int orange_shader = create_shader("../OpenGL/shaders/vertex.txt", "../OpenGL/shaders/fragment.txt");
+	unsigned int blue_shader = create_shader("../OpenGL/shaders/vertex.txt", "../OpenGL/shaders/fragment2.txt");
 
-	
-	std::vector<float> pointA = { -0.5f, -0.5f, 0.0f };
+	std::vector<float> pointA = { 0.5f,  0.5f, 0.0f };
 	std::vector<float> pointB = { 0.5f, -0.5f, 0.0f };
-	std::vector<float> pointC = { 0.0f, 0.5f, 0.0f };
-	
-	Triangle* triangle = new Triangle(pointA, pointB, pointC);	
+	std::vector<float> pointC = { -0.5f,  0.5f, 0.0f };
+
+	std::vector<float> pointD = { 0.5f, -0.5f, 0.0f };
+	std::vector<float> pointE = { -0.5f, -0.5f, 0.0f };
+	std::vector<float> pointF = { -0.5f, 0.5f, 0.0f };
+
+	Triangle* triangleA = new Triangle(pointA, pointB, pointC);
+	Triangle* triangleB = new Triangle(pointD, pointE, pointF);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -24,15 +29,18 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shader);
-		
-		triangle->draw();
+		glUseProgram(blue_shader);
+		triangleA->draw();
+
+		glUseProgram(orange_shader);
+		triangleB->draw();
 
 		glfwSwapBuffers(window);
 	}
 
 
-	glDeleteProgram(shader);
+	glDeleteProgram(blue_shader);
+	glDeleteProgram(orange_shader);
 	glfwTerminate();
 	
 	return 0;
@@ -57,7 +65,7 @@ GLFWwindow* createWindow()
 		return NULL;
 	}
 
-	glClearColor(0.7f, 0.5f, 1.0f, 1.0f);
+	glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
 
 	return window;
 }

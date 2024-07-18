@@ -33,5 +33,6 @@
   <ItemGroup>
     <Text Include="shaders\fragment.txt" />
     <Text Include="shaders\vertex.txt" />
+    <Text Include="shaders\fragment2.txt" />
   </ItemGroup>
 </Project>

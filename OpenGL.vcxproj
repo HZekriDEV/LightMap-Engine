@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaders\fragment.txt" />
+    <Text Include="shaders\fragment2.txt" />
     <Text Include="shaders\vertex.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
