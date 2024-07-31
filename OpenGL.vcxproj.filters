@@ -21,7 +21,10 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
+    <ClCompile Include="gl_buffers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +32,16 @@
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gl_buffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="shaders\fragment.txt" />
-    <Text Include="shaders\vertex.txt" />
-    <Text Include="shaders\fragment2.txt" />
+    <Text Include="shaders\fragment.frag" />
+    <Text Include="shaders\vertex.vert" />
+    <Text Include="shaders\fragment2.frag" />
   </ItemGroup>
 </Project>

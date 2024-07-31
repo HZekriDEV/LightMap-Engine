@@ -7,3 +7,6 @@
 #include <sstream>
 #include <vector>
 #include <string>
+
+#include "gl_buffers.h"
+#include "shader.h"
