@@ -10,3 +10,4 @@
 
 #include "gl_buffers.h"
 #include "shader.h"
+#include "stb_image.h"
