@@ -20,6 +20,7 @@ int main()
 		1, 2, 3
 	};
 
+
 	unsigned int texture1;
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -79,9 +80,16 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
 		shader.Activate();
 		shader.SetInt("texture1", 0);
 		shader.SetInt("texture2", 1);
+		
+		unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
