@@ -1,2 +1,9 @@
 ﻿  main.cpp
+C:\dev\Personal\OpenGL\main.cpp(137,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(242,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(243,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(247,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(248,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(249,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(250,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   OpenGL.vcxproj -> C:\dev\Personal\OpenGL\x64\Debug\OpenGL.exe
