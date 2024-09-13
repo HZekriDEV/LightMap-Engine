@@ -10,6 +10,8 @@
 
 #include "gl_buffers.h"
 #include "shader.h"
+#include "texture.h"
+#include "Primitive3D.h"
 #include "stb_image.h"
 
 #include <glm/glm.hpp>
