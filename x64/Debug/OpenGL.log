@@ -1,14 +1,5 @@
-﻿  gl_buffers.cpp
-  main.cpp
-C:\dev\Personal\OpenGL\main.cpp(37,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(130,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(131,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(135,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(136,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(137,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\dev\Personal\OpenGL\main.cpp(138,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Primitive3D.cpp
-  shader.cpp
-  texture.cpp
-  Generating Code...
+﻿  Primitive3D.cpp
+C:\dev\Personal\OpenGL\Primitive3D.cpp(168,21): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\Primitive3D.cpp(170,22): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\Primitive3D.cpp(185,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
   OpenGL.vcxproj -> C:\dev\Personal\OpenGL\x64\Debug\OpenGL.exe

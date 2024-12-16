@@ -41,71 +41,163 @@ glm::mat4 Primitive3D::LocalToWorldmatrix() const
 void Primitive3D::Draw() const
 {
 	glBindVertexArray(vaoID);
-	glDrawArrays(GL_TRIANGLES, 0, numVertices);
+	//glDrawArrays(GL_TRIANGLES, 0, numVertices);
+	glDrawElements(GL_TRIANGLES, numVertices, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
-
 
 void Primitive3D::Initialize()
 {
 	if (m_Type == "CUBE")
-	{
+	{	
 		float vertices[] = {
-				//pos				//col			    //tex
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+			// Back face
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
 
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+			// Front face
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
 
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+			// Left face
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
 
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+			// Right face
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
 
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+			 // Bottom face
+			 -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			  0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			  0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			 -0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
 
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f
+			 // Top face
+			 -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
+			  0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
+			  0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
+			 -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f  // Top-left
 		};
+		unsigned int indices[] = {
+			// Back face
+			0, 1, 2,
+			2, 3, 0,
+
+			// Front face
+			4, 5, 6,
+			6, 7, 4,
+
+			// Left face
+			8, 9, 10,
+			10, 11, 8,
+
+			// Right face
+			12, 13, 14,
+			14, 15, 12,
+
+			// Bottom face
+			16, 17, 18,
+			18, 19, 16,
+
+			// Top face
+			20, 21, 22,
+			22, 23, 20
+		};
+		
 		numVertices = 36;
 
 		VAO VAO;
 		VBO VBO(vertices, sizeof(vertices));
+		EBO EBO(indices, sizeof(indices));
 		vaoID = VAO.ID;
 		vboID = VBO.ID;
+		eboID = EBO.ID;
 
 		VAO.Bind();
 		VBO.Bind();
 		VAO.LinkVBO(VBO, 0);
+		EBO.Bind();
 
 		VAO.Unbind();
 		VBO.Unbind();
+		EBO.Unbind();
+	}
+	else if (m_Type == "UV_SPHERE")
+	{
+		std::vector<float> vertices;
+		std::vector<GLuint> indices;
+
+		unsigned int stacks = 18;
+		unsigned int slices = 36;
+		float r = 0.5f;
+
+		for (unsigned int i = 0; i <= stacks; ++i)
+		{
+			float theta = glm::pi<float>() * (float)i / (float)stacks;
+
+			for (unsigned int j = 0; j <= slices; ++j)
+			{
+				float phi = 2.0f * glm::pi<float>() * (float)j / (float)slices;
+				float x = r * glm::sin(theta) * glm::cos(phi);
+				float y = r * glm::cos(theta);
+				float z = r * glm::sin(theta) * glm::sin(phi);
+
+				float u = (float)j / (float)slices; 
+				float v = (float)i / (float)stacks;
+
+				vertices.push_back(x);
+				vertices.push_back(y);
+				vertices.push_back(z);
+				vertices.push_back(1.0f);
+				vertices.push_back(1.0f);
+				vertices.push_back(1.0f);
+				vertices.push_back(u);
+				vertices.push_back(v);
+			}
+		}
+
+		for (int i = 0; i <= stacks; ++i)
+		{
+			for (int j = 0; j <= slices; ++j)
+			{
+				int first = (i * (slices + 1)) + j;
+				int second = first + slices + 1;
+
+				// Two triangles per quad
+				indices.push_back(first);
+				indices.push_back(second);
+				indices.push_back(first + 1);
+
+				indices.push_back(second);
+				indices.push_back(second + 1);
+				indices.push_back(first + 1);
+			}
+		}
+		numVertices = indices.size();
+
+		VAO VAO;
+		VBO VBO(&vertices[0], vertices.size() * sizeof(float));
+		EBO EBO(&indices[0], indices.size() * sizeof(GLuint));
+		vaoID = VAO.ID;
+		vboID = VBO.ID;
+		eboID = EBO.ID;
+
+		VAO.Bind();
+		VBO.Bind();
+		VAO.LinkVBO(VBO, 0);
+		EBO.Bind();
+
+		VAO.Unbind();
+		VBO.Unbind();
+		EBO.Unbind();
 	}
 }

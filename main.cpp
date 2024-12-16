@@ -28,6 +28,7 @@ int main()
 
 
 	Primitive3D cube("CUBE");
+	Primitive3D sphere("UV_SPHERE");
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -46,10 +47,14 @@ int main()
 		shader.Activate();
 		shader.SetInt("texture1", 0);
 		shader.SetInt("texture2", 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1.ID);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2.ID);
 
 		// For the object (transforms from local to world coordinates)
 		glm::mat4 model = cube.LocalToWorldmatrix();
-
 
 		// For transforming vertices in world coordinates to the cameras view coordinates
 		glm::mat4 view = glm::mat4(1.0f);
@@ -59,17 +64,30 @@ int main()
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
 
+		cube.SetPosition(glm::vec3(1.0f, 0.0f, 0.0f));
 		
 		shader.SetMat4("model", model);
 		shader.SetMat4("view", view);
 		shader.SetMat4("projection", projection);
 		cube.Draw();
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1.ID);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2.ID);
+		model = sphere.LocalToWorldmatrix();
+
+		// For transforming vertices in world coordinates to the cameras view coordinates
+		view = glm::mat4(1.0f);
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+		// For projecting the view coordinates to the frustum, which gets turned to fragments
+		projection = glm::mat4(1.0f);
+		projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+
+		sphere.SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+
+		shader.SetMat4("model", model);
+		shader.SetMat4("view", view);
+		shader.SetMat4("projection", projection);
+		sphere.Draw();
 
 
 		glfwSwapBuffers(window);

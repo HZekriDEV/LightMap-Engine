@@ -30,6 +30,7 @@ class Primitive3D
 
 		GLuint vaoID;
 		GLuint vboID;
+		GLuint eboID;
 		
 		unsigned int numVertices;
 		
