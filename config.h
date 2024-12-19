@@ -11,6 +11,7 @@
 #include "gl_buffers.h"
 #include "shader.h"
 #include "texture.h"
+#include "Camera.h"
 #include "Primitive3D.h"
 #include "stb_image.h"
 

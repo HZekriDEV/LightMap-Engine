@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "Camera.h"
 
 class Shader
 {
@@ -18,7 +19,7 @@ class Shader
 
 		Shader(const char* vertex_filepath, const char* fragment_filepath);
 
-		void Activate();
+		void Activate() const;
 		void SetBool(const std::string& name, bool value) const;
 		void SetInt(const std::string& name, int value) const;
 		void SetFloat(const std::string& name, float value) const;

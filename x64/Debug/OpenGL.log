@@ -1,5 +1,19 @@
-﻿  Primitive3D.cpp
-C:\dev\Personal\OpenGL\Primitive3D.cpp(168,21): warning C4018: '<=': signed/unsigned mismatch
-C:\dev\Personal\OpenGL\Primitive3D.cpp(170,22): warning C4018: '<=': signed/unsigned mismatch
-C:\dev\Personal\OpenGL\Primitive3D.cpp(185,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+﻿  Camera.cpp
+  Primitive3D.cpp
+C:\dev\Personal\OpenGL\Primitive3D.cpp(183,21): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\Primitive3D.cpp(185,22): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\Primitive3D.cpp(200,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  gl_buffers.cpp
+  main.cpp
+C:\dev\Personal\OpenGL\main.cpp(53,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(126,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(127,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(131,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(132,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(133,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\dev\Personal\OpenGL\main.cpp(134,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  shader.cpp
+  texture.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGL.vcxproj -> C:\dev\Personal\OpenGL\x64\Debug\OpenGL.exe

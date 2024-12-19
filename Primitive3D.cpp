@@ -1,6 +1,7 @@
 #include "config.h"
 
-Primitive3D::Primitive3D(const std::string& type)
+Primitive3D::Primitive3D(const std::string& type, const Shader& shader)
+	: m_shader(shader)  // Use member initializer list to set the shader
 {
 	m_Type = type;
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -38,10 +39,24 @@ glm::mat4 Primitive3D::LocalToWorldmatrix() const
 	return model;
 }
 
-void Primitive3D::Draw() const
+void Primitive3D::Draw(const Camera& camera) const
 {
+	m_shader.Activate();
+
+	// For the object (transforms from local to world coordinates)
+	glm::mat4 model = LocalToWorldmatrix();
+
+	// For transforming vertices in world coordinates to the cameras view coordinates
+	glm::mat4 view = camera.ViewMatrix();
+
+	// For projecting the view coordinates to the frustum, which gets turned to fragments
+	glm::mat4 projection = projection = glm::perspective(glm::radians(camera.FOV()), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	m_shader.SetMat4("model", model);
+	m_shader.SetMat4("view", view);
+	m_shader.SetMat4("projection", projection);
+
 	glBindVertexArray(vaoID);
-	//glDrawArrays(GL_TRIANGLES, 0, numVertices);
 	glDrawElements(GL_TRIANGLES, numVertices, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
