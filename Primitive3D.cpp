@@ -66,41 +66,42 @@ void Primitive3D::Initialize()
 	if (m_Type == "CUBE")
 	{	
 		float vertices[] = {
+			// Position            // Normal               // UV
 			// Back face
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
+			-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,    0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,    1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,    1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,    0.0f, 1.0f, // Top-left
 
 			// Front face
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
+			-0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,    0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,    1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,    1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,    0.0f, 1.0f, // Top-left
 
 			// Left face
-			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
+			-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,    0.0f, 0.0f, // Bottom-left
+			-0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,    1.0f, 0.0f, // Bottom-right
+			-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,    1.0f, 1.0f, // Top-right
+			-0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,    0.0f, 1.0f, // Top-left
 
 			// Right face
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
+			 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,    0.0f, 0.0f, // Bottom-left
+			 0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,    1.0f, 0.0f, // Bottom-right
+			 0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,    1.0f, 1.0f, // Top-right
+			 0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,    0.0f, 1.0f, // Top-left
 
 			 // Bottom face
-			 -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			  0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			  0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			 -0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, // Top-left
+			 -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,    0.0f, 0.0f, // Bottom-left
+			  0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,    1.0f, 0.0f, // Bottom-right
+			  0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,    1.0f, 1.0f, // Top-right
+			 -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,    0.0f, 1.0f, // Top-left
 
 			 // Top face
-			 -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // Bottom-left
-			  0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // Bottom-right
-			  0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // Top-right
-			 -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f  // Top-left
+			 -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,    0.0f, 0.0f, // Bottom-left
+			  0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,    1.0f, 0.0f, // Bottom-right
+			  0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,    1.0f, 1.0f, // Top-right
+			 -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,    0.0f, 1.0f  // Top-left
 		};
 		unsigned int indices[] = {
 			// Back face

@@ -27,23 +27,25 @@ int main()
 
 	Shader shader("../OpenGL/shaders/vertex.vert", "../OpenGL/shaders/fragment.frag");
 	Shader lightShader("../OpenGL/shaders/light_vertex.vert", "../OpenGL/shaders/light_fragment.frag");
-	
 
 
 	Texture texture1("../OpenGL/textures/container.jpg", false, false);
 	Texture texture2("../OpenGL/textures/awesomeface.png", true, true);
 
+	shader.AddTexture(texture1);
+	shader.AddTexture(texture2);
+
+
+	shader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
+	shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+	
 	Primitive3D cube("CUBE", shader);
-	Primitive3D sphere("UV_SPHERE");
+	Primitive3D sphere("UV_SPHERE", lightShader);
 
-	shader.Activate();
-	shader.SetInt("texture1", 0);
-	shader.SetInt("texture2", 1);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1.ID);
+	sphere.SetPosition(lightPosition);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2.ID);
+	shader.SetVec3("lightPos", lightPosition.x, lightPosition.y, lightPosition.z);
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -60,13 +62,17 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		/*-------- Render Scene --------*/
+		shader.Activate();
+		shader.SetVec3("viewPos", mainCamera.Position().x, mainCamera.Position().y, mainCamera.Position().z);
 
+
+		cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
+		cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
 		cube.Draw(mainCamera);
 
-		sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 		sphere.Draw(mainCamera);
 
-		/*-------- End Render --------*/
+		/*--------- End Render ---------*/
 
 		glfwSwapBuffers(window);
 	}
@@ -95,7 +101,7 @@ GLFWwindow* createWindow()
 		return NULL;
 	}
 
-	glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
+	glClearColor(0.025f, 0.025f, 0.05f, 1.0f);
 
 	return window;
 }
