@@ -163,6 +163,8 @@
   <ItemGroup>
     <Image Include="textures\awesomeface.png" />
     <Image Include="textures\container.jpg" />
+    <Image Include="textures\container2.png" />
+    <Image Include="textures\container2_specular.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default_fragment.frag" />

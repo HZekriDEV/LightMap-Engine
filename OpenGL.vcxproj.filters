@@ -75,6 +75,12 @@
     <Image Include="textures\awesomeface.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\container2_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\light_vertex.vert" />

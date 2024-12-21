@@ -29,24 +29,29 @@ int main()
 	Shader lightShader("../OpenGL/shaders/light_vertex.vert", "../OpenGL/shaders/light_fragment.frag");
 
 
-	Texture texture1("../OpenGL/textures/container.jpg", false, false);
-	Texture texture2("../OpenGL/textures/awesomeface.png", true, true);
+	Texture diffuse("../OpenGL/textures/container2.png", true, true);
+	Texture specular("../OpenGL/textures/container2_specular.png", true, true);
 
-	shader.AddTexture(texture1);
-	shader.AddTexture(texture2);
+	shader.AddTexture(diffuse);
+	shader.SetInt("material.diffuse", 0);
+	shader.AddTexture(specular);
+	shader.SetInt("material.specular", 1);
+	
 
+	//shader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+	//shader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+	//shader.SetVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	shader.SetFloat("material.shininess", 32.0f);
 
-	shader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
-	shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+	shader.SetVec3("light.direction", -0.2f, -1.0f, -0.3f);
+	shader.SetVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	shader.SetVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+	shader.SetVec3("light.specular", 1.0f, 1.0f, 1.0f);
 	
 	Primitive3D cube("CUBE", shader);
 	Primitive3D sphere("UV_SPHERE", lightShader);
 
-	sphere.SetPosition(lightPosition);
-
-	shader.SetVec3("lightPos", lightPosition.x, lightPosition.y, lightPosition.z);
-
+	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 
 	glEnable(GL_DEPTH_TEST);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
