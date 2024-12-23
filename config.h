@@ -9,11 +9,13 @@
 #include <string>
 
 #include "gl_buffers.h"
+#include "stb_image.h"
 #include "shader.h"
 #include "texture.h"
 #include "Camera.h"
 #include "Primitive3D.h"
-#include "stb_image.h"
+#include "Light.h"
+#include "Color.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="gl_buffers.h" />
     <ClInclude Include="Primitive3D.h" />

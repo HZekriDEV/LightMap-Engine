@@ -36,22 +36,22 @@ int main()
 	shader.SetInt("material.diffuse", 0);
 	shader.AddTexture(specular);
 	shader.SetInt("material.specular", 1);
-	
-
-	//shader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-	//shader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-	//shader.SetVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	shader.SetFloat("material.shininess", 32.0f);
 
-	shader.SetVec3("light.direction", -0.2f, -1.0f, -0.3f);
-	shader.SetVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	shader.SetVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	shader.SetVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	LightManager lightManager;
+
+	DirectionalLight dirLight = DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), Color::White(), 1.0f);
+	SpotLight spotLight = SpotLight(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(0.0, 0.0, 0.0)-glm::vec3(-2.0f, 0.0f, 0.0f) , Color::White(), 1.0f, 12.5f, 17.5f);
+
+	lightManager.directionalLights.push_back(dirLight);
+	lightManager.spotLights.push_back(spotLight);
 	
 	Primitive3D cube("CUBE", shader);
 	Primitive3D sphere("UV_SPHERE", lightShader);
 
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
+	cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
 
 	glEnable(GL_DEPTH_TEST);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -67,14 +67,9 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		/*-------- Render Scene --------*/
-		shader.Activate();
-		shader.SetVec3("viewPos", mainCamera.Position().x, mainCamera.Position().y, mainCamera.Position().z);
-
-
-		cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
-		cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
+		lightManager.ApplyLightsToShader(shader);
+		
 		cube.Draw(mainCamera);
-
 		sphere.Draw(mainCamera);
 
 		/*--------- End Render ---------*/

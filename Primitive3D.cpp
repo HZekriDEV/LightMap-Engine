@@ -43,6 +43,8 @@ void Primitive3D::Draw(const Camera& camera) const
 {
 	m_shader.Activate();
 
+	m_shader.SetVec3("viewPos", camera.Position());
+
 	// For the object (transforms from local to world coordinates)
 	glm::mat4 model = LocalToWorldmatrix();
 
