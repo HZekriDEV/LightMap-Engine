@@ -128,8 +128,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     return diffuse + specular;
 }
 
-
-
 void main()
 {
     // Properties

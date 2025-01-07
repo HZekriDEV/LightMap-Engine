@@ -13,10 +13,14 @@
 #include "shader.h"
 #include "texture.h"
 #include "Camera.h"
-#include "Primitive3D.h"
 #include "Light.h"
 #include "Color.h"
+#include "mesh.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>

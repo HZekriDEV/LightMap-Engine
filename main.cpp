@@ -46,8 +46,8 @@ int main()
 	lightManager.directionalLights.push_back(dirLight);
 	lightManager.spotLights.push_back(spotLight);
 	
-	Primitive3D cube("CUBE", shader);
-	Primitive3D sphere("UV_SPHERE", lightShader);
+	Mesh cube("CUBE", shader);
+	Mesh sphere("UV_SPHERE", lightShader);
 
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));

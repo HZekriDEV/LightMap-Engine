@@ -14,6 +14,7 @@ class Texture
 {
 	public:
 		// Texture ID
+		std::string type;
 		unsigned int ID;
 		int width, height, color_channels;
 

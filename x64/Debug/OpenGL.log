@@ -1,4 +1,12 @@
-﻿  main.cpp
+﻿  Camera.cpp
+C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  gl_buffers.cpp
+C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  main.cpp
 C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
@@ -9,4 +17,24 @@ C:\dev\Personal\OpenGL\main.cpp(137,16): warning C4244: 'initializing': conversi
 C:\dev\Personal\OpenGL\main.cpp(138,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\dev\Personal\OpenGL\main.cpp(139,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\dev\Personal\OpenGL\main.cpp(140,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  mesh.cpp
+C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\mesh.cpp(100,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\dev\Personal\OpenGL\mesh.cpp(236,21): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\mesh.cpp(238,22): warning C4018: '<=': signed/unsigned mismatch
+C:\dev\Personal\OpenGL\mesh.cpp(253,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  shader.cpp
+C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\shader.cpp(105,69): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+C:\dev\Personal\OpenGL\shader.cpp(108,40): warning C4267: 'argument': conversion from 'size_t' to 'GLenum', possible loss of data
+  texture.cpp
+C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGL.vcxproj -> C:\dev\Personal\OpenGL\x64\Debug\OpenGL.exe
