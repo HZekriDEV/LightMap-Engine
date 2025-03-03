@@ -1,13 +1,16 @@
 #include "config.h"
 
-Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const std::vector<Texture> textures)
-	: m_shader(Shader("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag"))
+Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const std::vector<Texture> textures, const Shader& shader)
+	: m_shader(shader)
 {
-	m_Type = "Custom";
+	m_Type = "CUSTOM";
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	m_RotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_RotationAngle = 0.0f;
+	
+	m_vertices = vertices;
+	m_indices = indices;
 
 	Initialize();
 }
@@ -70,7 +73,7 @@ void Mesh::Draw(const Camera& camera) const
 	m_shader.SetMat4("view", view);
 	m_shader.SetMat4("projection", projection);
 
-	unsigned int diffuseNr = 1;
+	/*unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
@@ -86,7 +89,7 @@ void Mesh::Draw(const Camera& camera) const
 		m_shader.SetInt(("material." + name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].ID);
 	}
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);*/
 
 	glBindVertexArray(vaoID);
 	glDrawElements(GL_TRIANGLES, numVertices, GL_UNSIGNED_INT, 0);
@@ -95,12 +98,19 @@ void Mesh::Draw(const Camera& camera) const
 
 void Mesh::Initialize()
 {
-	if (m_Type == "Custom")
+	if (m_Type == "CUSTOM")
 	{
+		if (m_vertices.empty())
+		{
+			std::cout << "Error: CUSTOM Mesh has no vertices!" << std::endl;
+			return;
+		}
+
 		numVertices = indices.size();
 
 		VAO VAO;
-		VBO VBO(&vertices[0], sizeof(vertices));
+
+		VBO VBO(&m_vertices[0], sizeof(vertices));
 		EBO EBO(&indices[0], sizeof(indices));
 		vaoID = VAO.ID;
 		vboID = VBO.ID;

@@ -48,6 +48,7 @@ int main()
 	
 	Mesh cube("CUBE", shader);
 	Mesh sphere("UV_SPHERE", lightShader);
+	Model backpack("../OpenGL/backpack/backpack.obj", shader);
 
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
@@ -69,6 +70,8 @@ int main()
 		/*-------- Render Scene --------*/
 		lightManager.ApplyLightsToShader(shader);
 		
+		backpack.Draw(mainCamera);
+
 		cube.Draw(mainCamera);
 		sphere.Draw(mainCamera);
 

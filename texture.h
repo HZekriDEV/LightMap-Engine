@@ -15,10 +15,12 @@ class Texture
 	public:
 		// Texture ID
 		std::string type;
+		std::string path;
 		unsigned int ID;
 		int width, height, color_channels;
 
 		Texture(const char* texture_filepath, bool flip_vertically, bool has_alpha);
+		Texture(const char* texture_filepath, const char* type, const unsigned int id);
 
 		void SetParameters();
 };

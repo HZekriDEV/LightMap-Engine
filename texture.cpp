@@ -39,6 +39,13 @@ Texture::Texture(const char* texture_filepath, bool flip_vertically, bool has_al
 	stbi_image_free(data);
 };
 
+Texture::Texture(const char* texture_filepath, const char* type, const unsigned int id)
+{
+	path = texture_filepath;
+	this->type = type;
+	ID = id;
+}
+
 void Texture::SetParameters()
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

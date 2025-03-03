@@ -23,7 +23,8 @@ class Mesh
 		std::vector<unsigned int> indices;
 		std::vector<Texture> textures;
 
-		Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const std::vector<Texture> textures);
+		Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const std::vector<Texture> textures,
+			const Shader& shader = Shader("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag"));
 		Mesh(const std::string& primitiveType, const Shader& shader = Shader("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag"));
 
 		// Setters for transformations
@@ -50,6 +51,8 @@ class Mesh
 		GLuint eboID;
 
 		unsigned int numVertices;
+		std::vector<Vertex> m_vertices;
+		std::vector<GLuint> m_indices;
 
 		void Initialize();
 };
