@@ -19,7 +19,6 @@ struct Vertex
 class Mesh
 {
 	public:
-		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		std::vector<Texture> textures;
 
@@ -31,6 +30,8 @@ class Mesh
 		void SetPosition(const glm::vec3& position);
 		void SetRotation(float angle, const glm::vec3 axis);
 		void SetScale(const glm::vec3& scale);
+
+		std::vector<Vertex> GetVertices() const;
 
 		glm::mat4 LocalToWorldmatrix() const;
 

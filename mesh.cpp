@@ -106,12 +106,11 @@ void Mesh::Initialize()
 			return;
 		}
 
-		numVertices = indices.size();
+		numVertices = m_vertices.size();
 
 		VAO VAO;
-
-		VBO VBO(&m_vertices[0], sizeof(vertices));
-		EBO EBO(&indices[0], sizeof(indices));
+		VBO VBO(&m_vertices[0], m_vertices.size() * sizeof(Vertex));
+		EBO EBO(&m_indices[0], m_indices.size() * sizeof(unsigned int));
 		vaoID = VAO.ID;
 		vboID = VBO.ID;
 		eboID = EBO.ID;
@@ -278,4 +277,9 @@ void Mesh::Initialize()
 		VBO.Unbind();
 		EBO.Unbind();
 	}
+}
+
+std::vector<Vertex> Mesh::GetVertices() const
+{
+	return m_vertices;
 }

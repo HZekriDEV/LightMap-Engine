@@ -26,6 +26,7 @@ int main()
 	GLFWwindow* window = createWindow();
 
 	Shader shader("../OpenGL/shaders/vertex.vert", "../OpenGL/shaders/fragment.frag");
+	Shader ds("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag");
 	Shader lightShader("../OpenGL/shaders/light_vertex.vert", "../OpenGL/shaders/light_fragment.frag");
 
 
@@ -40,7 +41,7 @@ int main()
 
 	LightManager lightManager;
 
-	DirectionalLight dirLight = DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), Color::White(), 1.0f);
+	DirectionalLight dirLight = DirectionalLight(glm::vec3(0.0f, 0.0f, 0.0f), Color::White(), 10.0f);
 	SpotLight spotLight = SpotLight(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(0.0, 0.0, 0.0)-glm::vec3(-2.0f, 0.0f, 0.0f) , Color::White(), 1.0f, 12.5f, 17.5f);
 
 	lightManager.directionalLights.push_back(dirLight);
@@ -48,7 +49,7 @@ int main()
 	
 	Mesh cube("CUBE", shader);
 	Mesh sphere("UV_SPHERE", lightShader);
-	Model backpack("../OpenGL/backpack/backpack.obj", shader);
+	Model backpack("../OpenGL/backpack/backpack.obj", ds);
 
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));

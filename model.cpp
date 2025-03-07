@@ -99,9 +99,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
-	std::cout << vertices.size() << std::endl;
 
-	return Mesh(vertices, indices, textures, m_shader);
+	return Mesh(vertices, indices, textures, m_shader);;
 }
 std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType type, std::string typeName)
 {
