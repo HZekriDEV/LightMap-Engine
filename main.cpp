@@ -56,7 +56,7 @@ int main()
 	cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
 
 	glEnable(GL_DEPTH_TEST);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
