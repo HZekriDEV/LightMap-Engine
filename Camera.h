@@ -27,6 +27,9 @@ class Camera
 		float FOV() const;
 		glm::mat4 ViewMatrix() const;
 
+		int screenWidth;
+		int screenHeight;
+
 	private:
 		glm::vec3 m_cameraPos;
 		glm::vec3 m_cameraFront;

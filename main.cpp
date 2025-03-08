@@ -1,9 +1,11 @@
 #include "config.h"
 
 GLFWwindow* createWindow();
+void setWindowIcon(GLFWwindow* window);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 /*-------- Camera Settings --------*/
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -42,14 +44,16 @@ int main()
 	LightManager lightManager;
 
 	DirectionalLight dirLight = DirectionalLight(glm::vec3(0.0f, 0.0f, 0.0f), Color::White(), 10.0f);
-	SpotLight spotLight = SpotLight(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(0.0, 0.0, 0.0)-glm::vec3(-2.0f, 0.0f, 0.0f) , Color::White(), 1.0f, 12.5f, 17.5f);
+	//SpotLight spotLight = SpotLight(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(0.0, 0.0, 0.0)-glm::vec3(-2.0f, 0.0f, 0.0f) , Color::White(), 1.0f, 12.5f, 17.5f);
 
 	lightManager.directionalLights.push_back(dirLight);
-	lightManager.spotLights.push_back(spotLight);
+	//lightManager.spotLights.push_back(spotLight);
 	
 	Mesh cube("CUBE", shader);
 	Mesh sphere("UV_SPHERE", lightShader);
-	Model backpack("../OpenGL/backpack/backpack.obj", ds);
+	//Model backpack("../OpenGL/assets/backpack/backpack.obj", ds);
+	Model dragon("../OpenGL/assets/dragon.obj", ds);
+
 
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
@@ -70,10 +74,10 @@ int main()
 		/*-------- Render Scene --------*/
 		lightManager.ApplyLightsToShader(shader);
 		
-		backpack.Draw(mainCamera);
+		dragon.Draw(mainCamera);
 
-		cube.Draw(mainCamera);
-		sphere.Draw(mainCamera);
+		//cube.Draw(mainCamera);
+		//sphere.Draw(mainCamera);
 
 		/*--------- End Render ---------*/
 
@@ -95,6 +99,8 @@ GLFWwindow* createWindow()
 		return NULL;
 	}
 
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
 	window = glfwCreateWindow(640, 480, "Window", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
@@ -105,8 +111,34 @@ GLFWwindow* createWindow()
 	}
 
 	glClearColor(0.025f, 0.025f, 0.05f, 1.0f);
+	setWindowIcon(window);
 
 	return window;
+}
+
+void setWindowIcon(GLFWwindow* window)
+{
+	GLFWimage images[1]; // Array to hold the icon image
+	int width, height, channels;
+
+	// Load the icon image
+	images[0].pixels = stbi_load("../OpenGL/assets/icon.png", &width, &height, &channels, 4); // Force 4 channels (RGBA)
+
+	if (images[0].pixels)
+	{
+		images[0].width = width;
+		images[0].height = height;
+
+		// Set the window icon
+		glfwSetWindowIcon(window, 1, images);
+
+		// Free the image memory after setting the icon
+		stbi_image_free(images[0].pixels);
+	}
+	else
+	{
+		std::cout << "Failed to load window icon!" << std::endl;
+	}
 }
 
 void processInput(GLFWwindow* window)
@@ -133,9 +165,12 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		glfwSetCursorPosCallback(window, NULL);
+		firstMouse = true;
 	}
 	
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwGetFramebufferSize(window, &mainCamera.screenWidth, &mainCamera.screenHeight);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -178,4 +213,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 		mainCamera.SetFOV(1.0f);
 	if (mainCamera.FOV() > 45.0f)
 		mainCamera.SetFOV(45.0f);
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }

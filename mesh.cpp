@@ -67,7 +67,7 @@ void Mesh::Draw(const Camera& camera) const
 	glm::mat4 view = camera.ViewMatrix();
 
 	// For projecting the view coordinates to the frustum, which gets turned to fragments
-	glm::mat4 projection = projection = glm::perspective(glm::radians(camera.FOV()), 800.0f / 600.0f, 0.1f, 100.0f);
+	glm::mat4 projection = projection = glm::perspective(glm::radians(camera.FOV()), (float)camera.screenWidth / (float)camera.screenHeight, 0.1f, 100.0f);
 
 	m_shader.SetMat4("model", model);
 	m_shader.SetMat4("view", view);

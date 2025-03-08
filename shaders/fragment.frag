@@ -138,7 +138,7 @@ void main()
     // Directional lighting
     for(int i = 0; i < numDirLights; i++)
     {
-        //result += CalcDirLight(directionalLights[i], norm, viewDir);
+        result += CalcDirLight(directionalLights[i], norm, viewDir);
     }
 
     // Point lighting
