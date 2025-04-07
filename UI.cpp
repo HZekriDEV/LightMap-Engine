@@ -1,0 +1,298 @@
+#include "UI.h"
+
+std::vector<Object*> UI::sceneObjects;
+Object* UI::currentObject = nullptr;
+
+void UI::RenderUI()
+{
+	const char* items[] = { "Cube", "UV Sphere", "Custom" };
+	static int selected = -1; // Here we store our selection data as an index.
+
+	// Rendering Settings
+	ImGui::Begin("Renderer Settings");
+	
+	ImGui::End();
+
+	// Scene Hierarchy
+
+	ImGui::Begin("Scene Hierarchy");
+	static int clicked = 0;
+	if (ImGui::Button("New Object", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+		clicked++;
+	if (clicked & 1)
+	{
+		Object* obj = new Object("Object");
+		sceneObjects.push_back(obj);
+		obj->ID = sceneObjects.size() - 1;
+		clicked = 0;
+		selected = 0;
+	}
+
+	ImGui::Separator();
+	bool newObject = false;
+	for (int i = 0; i < sceneObjects.size(); i++)
+	{
+		static ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+		static int selectedNode = -1;
+
+		// Leaf nodes
+		if (sceneObjects[i]->childObjects.size() == 0)
+		{
+			ImGuiTreeNodeFlags nodeFlags = baseFlags;
+			nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+			const bool isSelected = (selectedNode == i);
+			if (isSelected)
+				nodeFlags |= ImGuiTreeNodeFlags_Selected;
+
+			ImGui::TreeNodeEx((void*)(intptr_t)i, nodeFlags, sceneObjects[i]->name.c_str());
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			{
+				selectedNode = i;
+				currentObject = sceneObjects[i];
+			}
+		}
+		/*TODO: Full tree hierarchy
+		for (int j = 0; j < sceneObjects[i].childObjects.size(); j++)
+		{
+			// Disable the default "open on single-click behavior" + set Selected flag according to our selection.
+			// To alter selection we use IsItemClicked() && !IsItemToggledOpen(), so clicking on an arrow doesn't alter selection.
+			ImGuiTreeNodeFlags node_flags = base_flags;
+			const bool is_selected = (selection_mask & (1 << j)) != 0;
+			if (is_selected)
+				node_flags |= ImGuiTreeNodeFlags_Selected;
+			if (j < 3)
+			{
+				// Items 0..2 are Tree Node
+				bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)j, node_flags, "Selectable Node %d", j);
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+					node_clicked = j;
+
+				if (node_open)
+				{
+					ImGui::BulletText("Blah blah\nBlah Blah");
+					ImGui::SameLine();
+					ImGui::SmallButton("Button");
+					ImGui::TreePop();
+				}
+			}
+		}*/
+	}
+	ImGui::End();
+
+	// Object Settings
+	ImGui::Begin("Object Settings");
+
+
+
+
+	ImGui::SeparatorText("Mesh");
+	static ImGuiComboFlags flags = 0;
+	
+
+	// Pass in the preview value visible before opening the combo (it could technically be different contents or not pulled from items[])
+	const char* comboPreviewValue = items[selected];
+
+	if (ImGui::BeginCombo("Type", comboPreviewValue, flags))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		{
+			const bool isSelected = (selected == n);
+			if (ImGui::Selectable(items[n], isSelected))
+				selected = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (isSelected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+	if (currentObject)
+	{
+		if (selected == 0)
+		{
+			Mesh cube = Mesh("CUBE");
+
+			currentObject->SetMesh(cube);
+		}
+		else if (selected == 1)
+		{
+			Mesh uvSphere = Mesh("UV_SPHERE");
+			currentObject->SetMesh(uvSphere);
+		}
+		else if (selected == 2)
+		{
+			static char str1[128] = "";
+			ImGui::InputTextWithHint("Shader", "enter path here", str1, IM_ARRAYSIZE(str1));
+		}
+	}
+
+	if (currentObject)
+	{
+		ImGui::SeparatorText("Transform");
+		glm::vec3 pos = currentObject->transform.position;
+		ImGui::DragFloat3("Position", &currentObject->transform.position.x, 1.0f);
+		glm::vec3 rot = currentObject->transform.eulerRotation;
+		ImGui::DragFloat3("Rotation", &currentObject->transform.eulerRotation.x, 1.0f);
+		glm::vec3 scale = currentObject->transform.scale;
+		ImGui::DragFloat3("Scale", &currentObject->transform.scale.x, 1.0f);
+
+		currentObject->UpdatePosition(pos);
+		currentObject->UpdateRotation(rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		currentObject->UpdateRotation(rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		currentObject->UpdateRotation(rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		currentObject->UpdateScale(scale);
+	}
+
+	ImGui::End();
+
+	// Console
+	ImGui::Begin("Console");
+
+	ImGui::End();
+}
+
+void UI::SetWindowIcon(GLFWwindow* window)
+{
+	GLFWimage images[1]; // Array to hold the icon image
+	int width, height, channels;
+
+	// Load the icon image
+	const char* path = "../OpenGL/assets/icon.png";
+	images[0].pixels = stbi_load(path, &width, &height, &channels, 4); // Force 4 channels (RGBA)
+
+	if (images[0].pixels)
+	{
+		images[0].width = width;
+		images[0].height = height;
+
+		// Set the window icon
+		glfwSetWindowIcon(window, 1, images);
+
+		// Free the image memory after setting the icon
+		stbi_image_free(images[0].pixels);
+	}
+	else
+	{
+		std::cout << "Failed to load window icon!" << std::endl;
+	}
+}
+
+GLFWwindow* UI::CreateWindow(int width, int height, const char* name)
+{
+	if (!glfwInit())
+		return nullptr;
+
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	GLFWwindow* window = glfwCreateWindow(width, height, name, nullptr, nullptr);
+	if (!window)
+	{
+		glfwTerminate();
+		return nullptr;
+	}
+
+	glfwMakeContextCurrent(window);
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		return nullptr;
+	}
+
+	glClearColor(0.025f, 0.025f, 0.05f, 1.0f);
+	SetWindowIcon(window);
+
+	return window;
+}
+
+void UI::InitImGui(GLFWwindow* window)
+{
+	// Initialize ImGui Context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	// Setup ImGui configuration flags
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable keyboard controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // Enable docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;   // Enable multi-viewports
+
+	// Setup ImGui style
+	ImGui::StyleColorsDark();  // Dark theme
+	//ImGui::StyleColorsClassic(); // Classic theme
+	// ImGui::StyleColorsLight(); // Light theme
+
+	// Initialize Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+}
+
+void UI::BeginFrame()
+{
+	// Start new ImGui frame
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		// Fullscreen window flags (no title bar, no resize, etc.)
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoBringToFrontOnFocus |
+			ImGuiWindowFlags_NoNavFocus |
+			ImGuiWindowFlags_NoBackground;
+
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0)); // Another approach
+
+		ImGui::Begin("DockSpace Window", nullptr, windowFlags);
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(); // if you pushed the transparent color
+
+		// Create the dockspace
+		ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+
+		// Add pass-thru to see the scene behind the center region:
+		ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+
+		ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
+		ImGui::End();
+	}
+}
+
+void UI::EndFrame()
+{
+	// Render ImGui draw data
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	// Update and render additional Platform Windows (for multi-viewport)
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
+}
+
+void UI::Cleanup(GLFWwindow* window)
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+}

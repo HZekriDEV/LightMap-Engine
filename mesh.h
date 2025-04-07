@@ -28,8 +28,10 @@ class Mesh
 
 		// Setters for transformations
 		void SetPosition(const glm::vec3& position);
-		void SetRotation(float angle, const glm::vec3 axis);
+		void SetRotation(float angle, const glm::vec3& axis);
 		void SetScale(const glm::vec3& scale);
+
+		const glm::vec3 GetPosition();
 
 		std::vector<Vertex> GetVertices() const;
 

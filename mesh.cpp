@@ -32,7 +32,7 @@ void Mesh::SetPosition(const glm::vec3& position)
 	m_Position = position;
 }
 
-void Mesh::SetRotation(float angle, const glm::vec3 axis)
+void Mesh::SetRotation(float angle, const glm::vec3& axis)
 {
 	m_RotationAngle = angle;
 	m_RotationAxis = axis;
@@ -41,6 +41,11 @@ void Mesh::SetRotation(float angle, const glm::vec3 axis)
 void Mesh::SetScale(const glm::vec3& scale)
 {
 	m_Scale = scale;
+}
+
+const glm::vec3 Mesh::GetPosition()
+{
+	return m_Position;
 }
 
 glm::mat4 Mesh::LocalToWorldmatrix() const

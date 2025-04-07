@@ -1,11 +1,11 @@
 #include "config.h"
 
-GLFWwindow* createWindow();
-void setWindowIcon(GLFWwindow* window);
-void processInput(GLFWwindow* window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void PollEvents();
+void ProcessInput(GLFWwindow* window);
+void CursorCallback(GLFWwindow* window, double xpos, double ypos);
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void RenderScene();
 
 /*-------- Camera Settings --------*/
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -20,13 +20,15 @@ float pitch = 0.0f, yaw = -90.0f;
 float fov = 45.0;
 bool firstMouse = true;
 
-Camera mainCamera = Camera(cameraPos, fov, pitch, yaw);;
+Camera mainCamera = Camera(cameraPos, fov, pitch, yaw);
 /*---------------------------------*/
 
 int main()
 {
-	GLFWwindow* window = createWindow();
+	GLFWwindow* window = UI::CreateWindow(1280, 720, "SGE");
+	UI::InitImGui(window);
 
+	#pragma region INITIALIZE SCENE
 	Shader shader("../OpenGL/shaders/vertex.vert", "../OpenGL/shaders/fragment.frag");
 	Shader ds("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag");
 	Shader lightShader("../OpenGL/shaders/light_vertex.vert", "../OpenGL/shaders/light_fragment.frag");
@@ -49,8 +51,8 @@ int main()
 	lightManager.directionalLights.push_back(dirLight);
 	//lightManager.spotLights.push_back(spotLight);
 	
-	Mesh cube("CUBE", shader);
-	Mesh sphere("UV_SPHERE", lightShader);
+	Mesh cube("CUBE", ds);
+	Mesh sphere("UV_SPHERE", ds);
 	//Model backpack("../OpenGL/assets/backpack/backpack.obj", ds);
 	Model dragon("../OpenGL/assets/dragon.obj", ds);
 
@@ -59,89 +61,63 @@ int main()
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
 	cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
 
-	glEnable(GL_DEPTH_TEST);
+	#pragma endregion  
+
 	while (!glfwWindowShouldClose(window))
 	{
-		float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		PollEvents();
 
-		processInput(window);
-		glfwPollEvents();
+		UI::BeginFrame();
 
+		ProcessInput(window);
+
+		UI::RenderUI();	// Render ImGui windows
+		
+		glEnable(GL_DEPTH_TEST);
+		/*-------- Render Scene --------*/
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/*-------- Render Scene --------*/
 		lightManager.ApplyLightsToShader(shader);
 		
-		dragon.Draw(mainCamera);
+		//dragon.Draw(mainCamera);
 
 		//cube.Draw(mainCamera);
 		//sphere.Draw(mainCamera);
+		for (int i = 0; i < UI::sceneObjects.size(); ++i)
+		{
+			UI::sceneObjects[i]->Render(mainCamera);
+		}
 
 		/*--------- End Render ---------*/
+		UI::EndFrame();
+
 
 		glfwSwapBuffers(window);
 	}
 
-	glfwTerminate();
-	
+	UI::Cleanup(window);
 	return 0;
 }
 
-GLFWwindow* createWindow()
+void PollEvents()
 {
-	GLFWwindow* window;
+	glfwPollEvents();
 
-	if (!glfwInit())
-	{
-		std::cout << "GLFW failed" << std::endl;
-		return NULL;
-	}
-
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-	window = glfwCreateWindow(640, 480, "Window", NULL, NULL);
-	glfwMakeContextCurrent(window);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		glfwTerminate();
-		return NULL;
-	}
-
-	glClearColor(0.025f, 0.025f, 0.05f, 1.0f);
-	setWindowIcon(window);
-
-	return window;
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
 }
 
-void setWindowIcon(GLFWwindow* window)
+void RenderScene()
 {
-	GLFWimage images[1]; // Array to hold the icon image
-	int width, height, channels;
+	// Clear screen
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Load the icon image
-	images[0].pixels = stbi_load("../OpenGL/assets/icon.png", &width, &height, &channels, 4); // Force 4 channels (RGBA)
 
-	if (images[0].pixels)
-	{
-		images[0].width = width;
-		images[0].height = height;
 
-		// Set the window icon
-		glfwSetWindowIcon(window, 1, images);
-
-		// Free the image memory after setting the icon
-		stbi_image_free(images[0].pixels);
-	}
-	else
-	{
-		std::cout << "Failed to load window icon!" << std::endl;
-	}
 }
 
-void processInput(GLFWwindow* window)
+void ProcessInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -155,59 +131,69 @@ void processInput(GLFWwindow* window)
 		mainCamera.SetPosition(mainCamera.Position() - (glm::normalize(glm::cross(mainCamera.Front(), mainCamera.Up())) * cameraSpeed));
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		mainCamera.SetPosition(mainCamera.Position() + (glm::normalize(glm::cross(mainCamera.Front(), mainCamera.Up())) * cameraSpeed));
+	
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwGetFramebufferSize(window, &mainCamera.screenWidth, &mainCamera.screenHeight);
+	glfwSetCursorPosCallback(window, CursorCallback);
+	glfwSetScrollCallback(window, ScrollCallback);
+}
 
+void CursorCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	// Forward event to ImGui's handler
+	ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureMouse)
+		return;  // Let ImGui handle it
+	
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		glfwSetCursorPosCallback(window, mouse_callback);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos;
+		lastX = xpos;
+		lastY = ypos;
+
+		float sensitivity = 0.1f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		mainCamera.SetYaw(mainCamera.Yaw() + xoffset);
+		mainCamera.SetPitch(mainCamera.Pitch() + yoffset);
+
+		if (mainCamera.Pitch() > 89.0f)
+			mainCamera.SetPitch(89.0f);
+		if (mainCamera.Pitch() < -89.0f)
+			mainCamera.SetPitch(-89.0f);
+
+		glm::vec3 direction;
+		direction.x = cos(glm::radians(mainCamera.Yaw())) * cos(glm::radians(mainCamera.Pitch()));
+		direction.y = sin(glm::radians(mainCamera.Pitch()));
+		direction.z = sin(glm::radians(mainCamera.Yaw())) * cos(glm::radians(mainCamera.Pitch()));
+		mainCamera.SetFrontVector(glm::normalize(direction));
 	}
 	else
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		glfwSetCursorPosCallback(window, NULL);
 		firstMouse = true;
 	}
-	
-	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwGetFramebufferSize(window, &mainCamera.screenWidth, &mainCamera.screenHeight);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
+	// Forward event to ImGui's handler
+	ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureMouse)
+		return;  // Let ImGui handle it
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-
-	float sensitivity = 0.1f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	mainCamera.SetYaw(mainCamera.Yaw() + xoffset);
-	mainCamera.SetPitch(mainCamera.Pitch() + yoffset);
-
-	if (mainCamera.Pitch() > 89.0f)
-		mainCamera.SetPitch(89.0f);
-	if (mainCamera.Pitch() < -89.0f)
-		mainCamera.SetPitch(-89.0f);
-
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(mainCamera.Yaw())) * cos(glm::radians(mainCamera.Pitch()));
-	direction.y = sin(glm::radians(mainCamera.Pitch()));
-	direction.z = sin(glm::radians(mainCamera.Yaw())) * cos(glm::radians(mainCamera.Pitch()));
-	mainCamera.SetFrontVector(glm::normalize(direction));
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
 	mainCamera.SetFOV(mainCamera.FOV() - (float)yoffset);
 	if (mainCamera.FOV() < 1.0f)
 		mainCamera.SetFOV(1.0f);
