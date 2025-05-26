@@ -38,7 +38,8 @@ class Object
 		void SetShader(const Shader& shader);
 		Mesh GetMesh();
 		void UpdatePosition(const glm::vec3& position);
-		void UpdateRotation(float angle, const glm::vec3& axis);
+		//void UpdateRotation(float angle, const glm::vec3& axis);
+		void UpdateRotation(const glm::vec3& angles);
 		void UpdateScale(const glm::vec3& scale);
 		void Render(const Camera& camera);
 
