@@ -9,6 +9,10 @@ void Object::SetMesh(const Mesh& mesh)
 {
 	m_mesh = mesh;
 }
+void Object::SetMesh(const Model& model)
+{
+	m_model = model;
+}
 void Object::SetShader(const Shader& shader)
 {
 	m_shader = shader;
@@ -21,10 +25,6 @@ void Object::UpdatePosition(const glm::vec3& position)
 {
 	m_mesh.SetPosition(position);
 }
-/*void Object::UpdateRotation(float angle, const glm::vec3& axis)
-{
-	m_mesh.SetRotation(angle, axis);
-}*/
 void Object::UpdateRotation(const glm::vec3& angles)
 {
 	// Represent each rotation as a quaternion	
@@ -57,5 +57,8 @@ void Object::UpdateScale(const glm::vec3& scale)
 
 void Object::Render(const Camera& camera)
 {
-	m_mesh.Draw(camera);
+	if (isPrimitive)
+		m_mesh.Draw(camera);
+	else
+		m_model.Draw(camera);
 }

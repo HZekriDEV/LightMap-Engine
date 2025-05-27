@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="dependencies\ImGuiFileDialog\ImGuiFileDialog.cpp" />
     <ClCompile Include="dependencies\imgui\imgui.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_demo.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_draw.cpp" />
@@ -161,6 +162,11 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="dependencies\ImGuiFileDialog\dirent\dirent.h" />
+    <ClInclude Include="dependencies\ImGuiFileDialog\ImGuiFileDialog.h" />
+    <ClInclude Include="dependencies\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
+    <ClInclude Include="dependencies\ImGuiFileDialog\stb\stb_image.h" />
+    <ClInclude Include="dependencies\ImGuiFileDialog\stb\stb_image_resize2.h" />
     <ClInclude Include="gl_buffers.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />

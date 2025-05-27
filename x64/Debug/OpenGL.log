@@ -1,9 +1,6 @@
-﻿  mesh.cpp
+﻿  UI.cpp
 C:\dev\Personal\OpenGL\Light.h(122,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\dev\Personal\OpenGL\Light.h(123,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\dev\Personal\OpenGL\Light.h(124,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\dev\Personal\OpenGL\mesh.cpp(109,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\dev\Personal\OpenGL\mesh.cpp(246,21): warning C4018: '<=': signed/unsigned mismatch
-C:\dev\Personal\OpenGL\mesh.cpp(248,22): warning C4018: '<=': signed/unsigned mismatch
-C:\dev\Personal\OpenGL\mesh.cpp(263,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\dev\Personal\OpenGL\UI.cpp(27,36): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
   OpenGL.vcxproj -> C:\dev\Personal\OpenGL\x64\Debug\OpenGL.exe

@@ -16,6 +16,7 @@ void UI::RenderUI()
 	// Scene Hierarchy
 
 	ImGui::Begin("Scene Hierarchy");
+	static bool newObject = false;
 	static int clicked = 0;
 	if (ImGui::Button("New Object", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
 		clicked++;
@@ -29,11 +30,12 @@ void UI::RenderUI()
 	}
 
 	ImGui::Separator();
-	bool newObject = false;
+	
 	for (int i = 0; i < sceneObjects.size(); i++)
 	{
 		static ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
 		static int selectedNode = -1;
+
 
 		// Leaf nodes
 		if (sceneObjects[i]->childObjects.size() == 0)
@@ -91,7 +93,7 @@ void UI::RenderUI()
 	
 
 	// Pass in the preview value visible before opening the combo (it could technically be different contents or not pulled from items[])
-	const char* comboPreviewValue = items[selected];
+	const char* comboPreviewValue = (selected >= 0 && selected < IM_ARRAYSIZE(items)) ? items[selected] : "Select Type";
 
 	if (ImGui::BeginCombo("Type", comboPreviewValue, flags))
 	{
@@ -122,8 +124,42 @@ void UI::RenderUI()
 		}
 		else if (selected == 2)
 		{
-			static char str1[128] = "";
-			ImGui::InputTextWithHint("Shader", "enter path here", str1, IM_ARRAYSIZE(str1));
+			/*static char path[128] = "";
+			ImGui::InputTextWithHint("Shader", "enter path here", path, IM_ARRAYSIZE(path));
+
+			if (strlen(path) > 0)
+			{
+				Model custom = Model(std::string(path));
+				currentObject->SetMesh(custom);
+			}
+			currentObject->isPrimitive = false;*/
+
+			static std::string path = "";
+			ImGui::Text("Selected Model Path:");
+			ImGui::SameLine();
+			ImGui::Text("%s", path.c_str());
+
+			if (ImGui::Button("Choose Model File"))
+			{
+				// Open the file dialog
+				ImGuiFileDialog::Instance()->OpenDialog("ChooseModel", "Choose a 3D Model", ".obj,.fbx,.gltf,.glb");
+			}
+
+			// Display the file dialog if it's open
+			if (ImGuiFileDialog::Instance()->Display("ChooseModel"))
+			{
+				// Check if the user selected a file
+				if (ImGuiFileDialog::Instance()->IsOk())
+				{
+					path = ImGuiFileDialog::Instance()->GetFilePathName();
+					Model custom = Model(path);
+					currentObject->SetMesh(custom);
+					currentObject->isPrimitive = false;
+				}
+
+				// Close the dialog
+				ImGuiFileDialog::Instance()->Close();
+			}
 		}
 	}
 

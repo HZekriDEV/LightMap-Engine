@@ -32,19 +32,21 @@ class Object
 		std::string name;
 		std::vector<Object> childObjects;
 		Transform transform;
+		bool isPrimitive = true;
 
 
 		void SetMesh(const Mesh& mesh);
+		void SetMesh(const Model& model);
 		void SetShader(const Shader& shader);
 		Mesh GetMesh();
 		void UpdatePosition(const glm::vec3& position);
-		//void UpdateRotation(float angle, const glm::vec3& axis);
 		void UpdateRotation(const glm::vec3& angles);
 		void UpdateScale(const glm::vec3& scale);
 		void Render(const Camera& camera);
 
 	private:
 		Mesh m_mesh = Mesh("CUBE");
+		Model m_model = Model("../OpenGL/assets/dragon.obj");
 		Shader m_shader = Shader("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag");
 };
 
