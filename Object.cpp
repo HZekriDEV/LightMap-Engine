@@ -16,6 +16,14 @@ void Object::SetMesh(const Model& model)
 void Object::SetShader(const Shader& shader)
 {
 	m_shader = shader;
+	if (isPrimitive)
+	{
+		m_mesh.SetShader(shader);
+	}
+	else
+	{
+		m_model.SetShader(shader);
+	}
 }
 Mesh Object::GetMesh()
 {
@@ -58,7 +66,11 @@ void Object::UpdateScale(const glm::vec3& scale)
 void Object::Render(const Camera& camera)
 {
 	if (isPrimitive)
+	{
 		m_mesh.Draw(camera);
+	}
 	else
+	{
 		m_model.Draw(camera);
+	}
 }

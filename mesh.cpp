@@ -1,7 +1,7 @@
 #include "config.h"
 
 Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const std::vector<Texture> textures, const Shader& shader)
-	: m_shader(shader)
+	: m_Shader(shader)
 {
 	m_Type = "CUSTOM";
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -16,7 +16,7 @@ Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices
 }
 
 Mesh::Mesh(const std::string& primitiveType, const Shader& shader)
-	: m_shader(shader) 
+	: m_Shader(shader) 
 {
 	m_Type = primitiveType;
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -43,6 +43,11 @@ void Mesh::SetScale(const glm::vec3& scale)
 	m_Scale = scale;
 }
 
+void Mesh::SetShader(const Shader& shader)
+{
+	m_Shader = shader;
+}
+
 const glm::vec3 Mesh::GetPosition()
 {
 	return m_Position;
@@ -61,9 +66,9 @@ glm::mat4 Mesh::LocalToWorldmatrix() const
 
 void Mesh::Draw(const Camera& camera) const
 {
-	m_shader.Activate();
+	m_Shader.Activate();
 
-	m_shader.SetVec3("viewPos", camera.Position());
+	m_Shader.SetVec3("viewPos", camera.Position());
 
 	// For the object (transforms from local to world coordinates)
 	glm::mat4 model = LocalToWorldmatrix();
@@ -74,9 +79,9 @@ void Mesh::Draw(const Camera& camera) const
 	// For projecting the view coordinates to the frustum, which gets turned to fragments
 	glm::mat4 projection = projection = glm::perspective(glm::radians(camera.FOV()), (float)camera.screenWidth / (float)camera.screenHeight, 0.1f, 100.0f);
 
-	m_shader.SetMat4("model", model);
-	m_shader.SetMat4("view", view);
-	m_shader.SetMat4("projection", projection);
+	m_Shader.SetMat4("model", model);
+	m_Shader.SetMat4("view", view);
+	m_Shader.SetMat4("projection", projection);
 
 	/*unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;

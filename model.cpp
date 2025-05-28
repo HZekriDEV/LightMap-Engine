@@ -7,6 +7,14 @@ Model::Model(const std::string& path, const Shader& shader, bool gamma) : gammaC
 {
 	loadModel(path);
 }
+void Model::SetShader(const Shader& shader)
+{
+	m_shader = shader;
+	for (unsigned int i = 0; i < m_meshes.size(); ++i)
+	{
+		m_meshes[i].SetShader(shader);
+	}
+}
 void Model::Draw(const Camera& camera) const
 {
 	for (unsigned int i = 0; i < m_meshes.size(); ++i)

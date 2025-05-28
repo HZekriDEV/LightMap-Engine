@@ -30,6 +30,7 @@ class Mesh
 		void SetPosition(const glm::vec3& position);
 		void SetRotation(float angle, const glm::vec3& axis);
 		void SetScale(const glm::vec3& scale);
+		void SetShader(const Shader& shader);
 
 		const glm::vec3 GetPosition();
 
@@ -47,7 +48,7 @@ class Mesh
 		glm::vec3 m_RotationAxis;
 		float m_RotationAngle;
 
-		Shader m_shader;
+		Shader m_Shader;
 
 		GLuint vaoID;
 		GLuint vboID;

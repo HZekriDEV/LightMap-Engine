@@ -17,6 +17,9 @@ class Model
 {
 	public: 
 		Model(const std::string& path, const Shader& shader = Shader("../OpenGL/shaders/default_vertex.vert", "../OpenGL/shaders/default_fragment.frag"), bool gamma = false);
+		
+		void SetShader(const Shader& shader);
+		
 		void Draw(const Camera& camera) const;
 
 	private:

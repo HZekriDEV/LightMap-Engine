@@ -85,32 +85,29 @@ void UI::RenderUI()
 	// Object Settings
 	ImGui::Begin("Object Settings");
 
-
-
-
-	ImGui::SeparatorText("Mesh");
-	static ImGuiComboFlags flags = 0;
-	
-
-	// Pass in the preview value visible before opening the combo (it could technically be different contents or not pulled from items[])
-	const char* comboPreviewValue = (selected >= 0 && selected < IM_ARRAYSIZE(items)) ? items[selected] : "Select Type";
-
-	if (ImGui::BeginCombo("Type", comboPreviewValue, flags))
-	{
-		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-		{
-			const bool isSelected = (selected == n);
-			if (ImGui::Selectable(items[n], isSelected))
-				selected = n;
-
-			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-			if (isSelected)
-				ImGui::SetItemDefaultFocus();
-		}
-		ImGui::EndCombo();
-	}
 	if (currentObject)
 	{
+		ImGui::SeparatorText("Mesh");
+		static ImGuiComboFlags flags = 0;
+
+		// Pass in the preview value visible before opening the combo (it could technically be different contents or not pulled from items[])
+		const char* comboPreviewValue = (selected >= 0 && selected < IM_ARRAYSIZE(items)) ? items[selected] : "Select Type";
+
+		if (ImGui::BeginCombo("Type", comboPreviewValue, flags))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+			{
+				const bool isSelected = (selected == n);
+				if (ImGui::Selectable(items[n], isSelected))
+					selected = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (isSelected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
 		if (selected == 0)
 		{
 			Mesh cube = Mesh("CUBE");
@@ -124,16 +121,6 @@ void UI::RenderUI()
 		}
 		else if (selected == 2)
 		{
-			/*static char path[128] = "";
-			ImGui::InputTextWithHint("Shader", "enter path here", path, IM_ARRAYSIZE(path));
-
-			if (strlen(path) > 0)
-			{
-				Model custom = Model(std::string(path));
-				currentObject->SetMesh(custom);
-			}
-			currentObject->isPrimitive = false;*/
-
 			static std::string path = "";
 			ImGui::Text("Selected Model Path:");
 			ImGui::SameLine();
@@ -161,10 +148,7 @@ void UI::RenderUI()
 				ImGuiFileDialog::Instance()->Close();
 			}
 		}
-	}
 
-	if (currentObject)
-	{
 		ImGui::SeparatorText("Transform");
 		glm::vec3 pos = currentObject->transform.position;
 		ImGui::DragFloat3("Position", &currentObject->transform.position.x, 1.0f);
@@ -176,6 +160,62 @@ void UI::RenderUI()
 		currentObject->UpdatePosition(pos);
 		currentObject->UpdateRotation(rot);
 		currentObject->UpdateScale(scale);
+
+		ImGui::SeparatorText("Shader");
+
+		static std::string vertexPath = "";
+		ImGui::Text("Selected Vertex Shader Path:");
+		ImGui::SameLine();
+		ImGui::Text("%s", vertexPath.c_str());
+
+		if (ImGui::Button("Choose Vertex Shader Files"))
+		{
+			// Open the file dialog
+			ImGuiFileDialog::Instance()->OpenDialog("ChooseVertShader", "Choose a vertex shader file", ".vert");
+		}
+
+		// Display the file dialog if it's open
+		if (ImGuiFileDialog::Instance()->Display("ChooseVertShader"))
+		{
+			// Check if the user selected a file
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				vertexPath = ImGuiFileDialog::Instance()->GetFilePathName();
+			}
+
+			// Close the dialog
+			ImGuiFileDialog::Instance()->Close();
+		}
+
+		static std::string fragmentPath = "";
+		ImGui::Text("Selected Fragment Shader Path:");
+		ImGui::SameLine();
+		ImGui::Text("%s", fragmentPath.c_str());
+
+		if (ImGui::Button("Choose Fragment Shader Files"))
+		{
+			// Open the file dialog
+			ImGuiFileDialog::Instance()->OpenDialog("ChooseFragShader", "Choose a fragment shader file", ".frag");
+		}
+
+		// Display the file dialog if it's open
+		if (ImGuiFileDialog::Instance()->Display("ChooseFragShader"))
+		{
+			// Check if the user selected a file
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				fragmentPath = ImGuiFileDialog::Instance()->GetFilePathName();
+			}
+
+			// Close the dialog
+			ImGuiFileDialog::Instance()->Close();
+		}
+
+		if (!vertexPath.empty() && !fragmentPath.empty())
+		{
+			Shader shader = Shader(vertexPath.c_str(), fragmentPath.c_str());
+			currentObject->SetShader(shader);
+		}
 	}
 
 	ImGui::End();
