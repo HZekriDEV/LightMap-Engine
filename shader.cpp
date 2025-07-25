@@ -63,6 +63,62 @@ Shader::Shader(const char* vertex_filepath, const char* fragment_filepath)
 	ID = shader;
 }
 
+Shader::Shader(std::vector<const char*> shader_plaintext)
+{
+	std::vector<unsigned int> modules;
+
+	unsigned int vertexModule = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexModule, 1, &shader_plaintext[0], NULL);
+	glCompileShader(vertexModule);
+
+	int success;
+	glGetShaderiv(vertexModule, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		char errorLog[1024];
+		glGetShaderInfoLog(vertexModule, 1024, NULL, errorLog);
+		std::cout << "Vertex Shader Module compilation failed: \n" << errorLog << std::endl;
+	}
+
+	unsigned int fragmentModule = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentModule, 1, &shader_plaintext[1], NULL);
+	glCompileShader(fragmentModule);
+
+	glGetShaderiv(fragmentModule, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		char errorLog[1024];
+		glGetShaderInfoLog(fragmentModule, 1024, NULL, errorLog);
+		std::cout << "Fragment Shader Module compilation failed: \n" << errorLog << std::endl;
+	}
+
+	modules.push_back(vertexModule);
+	modules.push_back(fragmentModule);
+
+	unsigned int shader = glCreateProgram();
+	for (unsigned int shaderModule : modules)
+	{
+		glAttachShader(shader, shaderModule);
+	}
+
+	glLinkProgram(shader);
+
+	glGetProgramiv(shader, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		char errorLog[1024];
+		glGetShaderInfoLog(shader, 1024, NULL, errorLog);
+		std::cout << "Shader linking failed: \n" << errorLog << std::endl;
+	}
+
+	for (unsigned int shaderModule : modules)
+	{
+		glDeleteShader(shaderModule);
+	}
+
+	ID = shader;
+}
+
 void Shader::Activate() const
 {
 	glUseProgram(ID);

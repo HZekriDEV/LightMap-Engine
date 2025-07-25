@@ -23,9 +23,134 @@ bool firstMouse = true;
 Camera mainCamera = Camera(cameraPos, fov, pitch, yaw);
 /*---------------------------------*/
 
+std::vector<GLuint> CreateCubeMap()
+{
+	// Load cubemap
+	std::string textureFaces[] = {"../OpenGL/textures/skybox/right.jpg",
+		"../OpenGL/textures/skybox/left.jpg",
+		"../OpenGL/textures/skybox/top.jpg",
+		"../OpenGL/textures/skybox/bottom.jpg",
+		"../OpenGL/textures/skybox/front.jpg",
+		"../OpenGL/textures/skybox/back.jpg"
+	};
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, numChannels;
+	unsigned char* data;
+	for (int i = 0; i < 6; ++i)
+	{
+		stbi_set_flip_vertically_on_load(false);
+		data = stbi_load(textureFaces[i].c_str(), &width, &height, &numChannels, 0);
+		
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Failed to load texture: " << textureFaces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	float skyboxVertices[] = {
+		// positions
+		-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	-1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f
+	};
+	
+	// Generate buffers and arrays
+	GLuint VBO, VAO;
+	glGenBuffers(1, &VBO); 
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+
+	// Upload vertex data to the GPU
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+
+	// Set vertex attributes
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0); // Bind to first attribute location
+
+	glBindVertexArray(0); // Unbind VAO
+
+	return { textureID, VBO, VAO };
+}
+
+void DrawSkyBox(GLuint textureID, GLuint VBO, GLuint VAO, Shader skyboxShader)
+{
+	glDepthMask(GL_FALSE); // Disable depth writing
+	skyboxShader.Activate();
+	skyboxShader.SetInt("skybox", 0);
+
+	glm::mat4 view = glm::mat4(glm::mat3(mainCamera.ViewMatrix()));
+	skyboxShader.SetMat4("view", view);
+	glm::mat4 projection = glm::perspective(glm::radians(mainCamera.FOV()), (float)mainCamera.screenWidth / (float)mainCamera.screenHeight, 0.1f, 100.0f);
+	skyboxShader.SetMat4("projection", projection);
+
+	glActiveTexture(GL_TEXTURE0);
+
+	glBindVertexArray(VAO);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDepthMask(GL_TRUE); // Disable depth writing
+}
+
 int main()
 {
-	GLFWwindow* window = UI::CreateWindow(1280, 720, "SGE");
+	GLFWwindow* window = UI::CreateWindow(1280, 720, "LightMap Engine");
 	UI::InitImGui(window);
 
 	#pragma region INITIALIZE SCENE
@@ -51,12 +176,45 @@ int main()
 	lightManager.directionalLights.push_back(dirLight);
 	//lightManager.spotLights.push_back(spotLight);
 	
-	Mesh cube("CUBE", ds);
+	Mesh cube("CUBE", shader);
 	Mesh sphere("UV_SPHERE", ds);
 	//Model backpack("../OpenGL/assets/backpack/backpack.obj", ds);
 	Model dragon("../OpenGL/assets/dragon.obj", ds);
 
+	std::vector<GLuint> cubeMapReqs = CreateCubeMap();
+	// Create shader for skybox
+	const char* vertexShaderSource = R"(
+		#version 330 core
+		layout(location = 0) in vec3 aPos;
 
+		out vec3 TexCoords;
+
+		uniform mat4 projection;
+		uniform mat4 view;
+
+		void main()
+		{
+			TexCoords = aPos;
+			gl_Position = projection * view * vec4(aPos, 1.0);
+		}
+	)";
+
+	const char* fragmentShaderSource = R"(
+		#version 330 core
+		out vec4 FragColor;
+
+		in vec3 TexCoords;
+
+		uniform samplerCube skybox;
+
+		void main()
+		{
+			FragColor = texture(skybox, TexCoords);
+		}
+	)";
+	std::vector<const char*> shaderSources = { vertexShaderSource, fragmentShaderSource };
+
+	Shader skyboxShader(shaderSources);
 	sphere.SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
 	cube.SetPosition(glm::vec3(1.0, 0.0, 0.0));
 	cube.SetRotation(30.0, glm::vec3(0.0, 1.0, 0.0));
@@ -72,16 +230,19 @@ int main()
 		ProcessInput(window);
 
 		UI::RenderUI();	// Render ImGui windows
-		
+
 		glEnable(GL_DEPTH_TEST);
 		/*-------- Render Scene --------*/
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		DrawSkyBox(cubeMapReqs[0], cubeMapReqs[1], cubeMapReqs[2], skyboxShader);
+
 
 		lightManager.ApplyLightsToShader(shader);
-		
+
 		//dragon.Draw(mainCamera);
 
-		//cube.Draw(mainCamera);
+		cube.Draw(mainCamera);
 		//sphere.Draw(mainCamera);
 		for (int i = 0; i < UI::sceneObjects.size(); ++i)
 		{

@@ -19,6 +19,7 @@ class Shader
 		unsigned int ID;
 
 		Shader(const char* vertex_filepath, const char* fragment_filepath);
+		Shader(std::vector<const char*> shader_plaintext);
 
 		void Activate() const;
 		void SetBool(const std::string& name, bool value) const;
